@@ -19,18 +19,25 @@ import java.util.Queue;
 
 @Service
 public class RestCallService {
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Autowired
+    public RestCallService(RestTemplate restTemplate, Queue<TrackRestData> exchangeQueue) {
+        this.restTemplate = restTemplate;
+        this.exchangeQueue = exchangeQueue;
+    }
+
+    private RestTemplate restTemplate;
+
     private Queue<TrackRestData> exchangeQueue;
 
     /**
+     * Method makes GET call to exchangerate.host for fetching exchange-rates and returns the result
      *
      * @param url - url for making external REST calls
+     *
      * @return - result returned by the external REST call
-     * @throws JSONException
-     * Method makes GET call to exchangerate.host for fetching exchange-rates and returns the result
+     *
+     * @throws JSONException for parsing JSON response
      */
     public String performGetRequest(String url) throws JSONException {
         HttpHeaders headers = new HttpHeaders();
@@ -38,17 +45,12 @@ public class RestCallService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
         String json = restTemplate.exchange(url, HttpMethod.GET, entity, String.class).getBody();
         JSONObject object = new JSONObject(json);
-        String result;
-        if (url.contains("latest")) {
-            result = object.getString("rates");
-        } else {
-            result = object.getString("result");
+        String result = url.contains("latest") ? object.getString("rates") : object.getString("result");
+        if (Objects.equals(result, "null")) {
+            throw new EmptyServerResponse("Null message from server, check input parameters");
         }
-        if (!Objects.equals(result, "null")) {
-            exchangeQueue.add(new TrackRestData(LocalDateTime.now(), url, result));
-            return result;
-        } else throw new EmptyServerResponse("Null message from server, check input parameters");
-
+        exchangeQueue.add(new TrackRestData(LocalDateTime.now(), url, result));
+        return result;
     }
 
 }

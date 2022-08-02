@@ -19,19 +19,4 @@ public class Config {
     public Queue<TrackRestData> queue() {
         return new LinkedList<>();
     }
-
-//    @Bean
-//    public Queue<TrackRestData> exchangeAllQueue() {
-//        return new PriorityQueue<>();
-//    }
-//
-//    @Bean
-//    public Queue<TrackRestData> conversionQueue() {
-//        return new PriorityQueue<>();
-//    }
-//
-//    @Bean
-//    public Queue<TrackRestData> conversionAllQueue() {
-//        return new PriorityQueue<>();
-//    }
 }

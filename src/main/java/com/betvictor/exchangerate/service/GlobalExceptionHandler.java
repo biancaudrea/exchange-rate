@@ -14,7 +14,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<String> handleException(Exception ex, WebRequest request) {
-        String bodyOfResponse = "";
+        String bodyOfResponse = "Exception thrown: " + ex.getMessage();
         return new ResponseEntity<>(bodyOfResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
