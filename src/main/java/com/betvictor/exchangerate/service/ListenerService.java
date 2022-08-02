@@ -2,17 +2,11 @@ package com.betvictor.exchangerate.service;
 
 import com.betvictor.exchangerate.model.TrackRestData;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.Queue;
 
 @Service
@@ -23,26 +17,47 @@ public class ListenerService {
     @Autowired
     RestCallService restCallService;
 
+    @Value("${base.url.exchange}")
+    private String exchangeBaseUrl;
+
+    @Value("${base.url.exchange.all}")
+    private String exchangeAllBaseUrl;
+
+    @Value("${base.url.conversion}")
+    private String conversionBaseUrl;
+
+    @Value("${base.url.conversion.all}")
+    private String conversionAllBaseUrl;
+
     public String convertCurrencyAToB(String from, String to) throws JSONException {
-        String url = "https://api.exchangerate.host/convert?amount=1&places=2&from=" + from + "&to=" + to;
+        String url = exchangeBaseUrl + from + "&to=" + to;
         return checkQueue(url);
     }
 
     public String convertCurrencyToAllExchangeRates(String currency) throws JSONException {
-        String url = "https://api.exchangerate.host/latest?amount=1&places=2&base=" + currency;
+        String url = exchangeAllBaseUrl + currency;
         return checkQueue(url);
     }
 
     public String getValueConversion(String from, String to, Integer amount) throws JSONException {
-        String url = "https://api.exchangerate.host/convert?places=2&from=" + from + "&to=" + to + "&amount=" + amount;
+        String url = conversionBaseUrl + from + "&to=" + to + "&amount=" + amount;
         return checkQueue(url);
     }
 
     public String getAllValueConversions(String currency, Integer amount, String symbols) throws JSONException {
-        String url = "https://api.exchangerate.host/latest?places=2&base=" + currency + "&amount=" + amount + "&symbols=" + symbols;
+        String url = conversionAllBaseUrl + currency + "&amount=" + amount + "&symbols=" + symbols;
         return checkQueue(url);
     }
 
+    /**
+     *
+     * @param url - url for REST call
+     * @return result of REST call
+     * @throws JSONException
+     * the method is used as a mechanism to do as little calls as possible to the external provider,
+     * if same url has been called in less than a minute ago, the result is in the queue and can be
+     * provided, without making another external call
+     */
     public String checkQueue(String url) throws JSONException {
         for (TrackRestData trackRestData : exchangeQueue) {
             if (url.equals(trackRestData.getUrl())) {

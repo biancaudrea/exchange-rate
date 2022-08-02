@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 import java.util.Queue;
 
 @Configuration

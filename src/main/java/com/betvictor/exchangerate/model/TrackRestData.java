@@ -1,6 +1,5 @@
 package com.betvictor.exchangerate.model;
 
-import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Objects;
 

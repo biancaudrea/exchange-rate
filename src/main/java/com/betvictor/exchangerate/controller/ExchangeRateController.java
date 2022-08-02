@@ -1,12 +1,10 @@
 package com.betvictor.exchangerate.controller;
 
 import com.betvictor.exchangerate.service.ListenerService;
-import com.betvictor.exchangerate.service.RestCallService;
 import io.swagger.v3.oas.annotations.Operation;
 import org.json.JSONException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -39,7 +37,7 @@ public class ExchangeRateController {
     @Operation(summary = " Get value conversion from Currency A to Currency B")
     @GetMapping("/conversion-all")
     public String getAllValueConversions(@RequestParam(value = "from", required = true) final String from,
-                                     @RequestParam(value = "amount", required = true) final Integer amount,
+                                         @RequestParam(value = "amount", required = true) final Integer amount,
                                          @RequestParam(value = "symbols", required = true) final String symbols) throws JSONException {
         return listenerService.getAllValueConversions(from, amount, symbols);
     }
