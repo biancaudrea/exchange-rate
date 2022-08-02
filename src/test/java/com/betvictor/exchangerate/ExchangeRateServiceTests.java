@@ -1,16 +1,13 @@
 package com.betvictor.exchangerate;
 
-import com.betvictor.exchangerate.controller.ExchangeRateController;
 import com.betvictor.exchangerate.exception.EmptyServerResponse;
 import com.betvictor.exchangerate.model.TrackRestData;
 import com.betvictor.exchangerate.service.ExchangeRateService;
 import com.betvictor.exchangerate.service.RestCallService;
 import org.json.JSONException;
-import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.util.ReflectionTestUtils;
@@ -46,7 +43,7 @@ public class ExchangeRateServiceTests extends BaseRESTTest {
     @Test
     public void convertCurrencyAToBWrongSymbolsTest() throws JSONException {
         Assertions.assertThrows(EmptyServerResponse.class, () ->
-            exchangeRateService.convertCurrencyAToB(WRONG_CURRENCY_A, WRONG_CURRENCY_B)
+                exchangeRateService.convertCurrencyAToB(WRONG_CURRENCY_A, WRONG_CURRENCY_B)
         );
     }
 
